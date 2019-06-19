@@ -40,10 +40,19 @@ app.get('/api', function(request, response) {
       spotifyApi.setAccessToken(data.body['access_token']);
   
       // Get info about the playlist and log it
-    spotifyApi.getPlaylist(process.env.PLAYLIST_ID)
+    spotifyApi.getPlaylist(process.env.PLAYLIST_ID, { offset:20, limit: 10 })
     .then(function(data) {
-      console.log('Here is the playlist:', data.body['expires_in']);
-      playlist_data = data.body;
+      console.log("this");
+      // console.log('Here is the playlist:', JSON.stringify(data.body));
+      const fs = require('fs');
+      fs.writeFileSync("test.txt", JSON.stringify(data.body), function(err) {
+        if(err) {
+            return console.log(err);
+        }
+    
+        console.log("The file was saved!");
+    }); 
+      response.json(data.body);
     }, function(err) {
       console.log('Something went wrong fetching the playlist!', err);
     });
@@ -53,5 +62,24 @@ app.get('/api', function(request, response) {
     }
   );
   console.log("I am at the end of the line");
-  response.json(data.body);
 });
+
+// app.get('/api', async function(request, response) {
+//   let credentials;
+//   try {
+//     credentials = await spotifyApi.clientCredentialsGrant();
+//   } catch (e) {
+//     console.log('Error: Could not get access token');
+//   }
+
+//   try {
+//     spotifyApi.setAccessToken(credentials.body['access_token']);
+//     let data = await spotifyApi.getPlaylist(process.env.PLAYLIST_ID);
+//   } catch (e) {
+//     console.log('something went wrong fetching the playlist!');
+//   }
+
+//   console.log('Here is the playlist:', data.body['expires_in']);
+//   response.json(data.body);
+  
+// });
