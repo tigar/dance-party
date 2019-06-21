@@ -45,7 +45,7 @@ app.get('/api', function(request, response) {
       console.log("this");
       // console.log('Here is the playlist:', JSON.stringify(data.body));
       const fs = require('fs');
-      fs.writeFileSync("test.txt", JSON.stringify(data.body), function(err) {
+      fs.writeFileSync("test.txt", JSON.stringify(data.body, null, 2), function(err) {
         if(err) {
             return console.log(err);
         }
